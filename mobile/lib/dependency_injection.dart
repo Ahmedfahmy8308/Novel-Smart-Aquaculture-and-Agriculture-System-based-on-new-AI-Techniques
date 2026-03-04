@@ -31,19 +31,19 @@ class AuthNotifier extends StateNotifier<AsyncValue<bool>> {
   AuthNotifier(this._apiClient) : super(const AsyncValue.data(false));
 
   Future<void> login(String email, String password) async {
+    // Temporary mock login while API is not ready: allow navigation when
+    // email and password are present. Replace with real API call once backend
+    // is available.
     state = const AsyncValue.loading();
     try {
-      final result = await _apiClient.post('/auth/login', {
-        'email': email,
-        'password': password,
-      });
+      await Future.delayed(const Duration(milliseconds: 300));
 
-      if (result['token'] != null) {
-        _apiClient.setAuthToken(result['token']);
-        state = const AsyncValue.data(true);
-      } else {
-        state = AsyncValue.error('Login failed', StackTrace.current);
+      final hasBasicCreds = email.trim().isNotEmpty && password.isNotEmpty;
+      if (!hasBasicCreds) {
+        throw 'Please enter email and password';
       }
+
+      state = const AsyncValue.data(true);
     } catch (e, stack) {
       state = AsyncValue.error(e, stack);
     }

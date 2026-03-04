@@ -9,61 +9,51 @@ import '../../../../core/utils/helpers.dart';
 // ────────────────────────────────────────────────────────────────
 const _kFieldBg = Color(0xFF0D2B1A);
 const _kFieldBorder = Color(0xFF2A5C2A);
-const _kGreen = Color(0xFF3A8C2F);
 const _kWhite = Colors.white;
 const _kSubtitle = Color(0xFF7A9A7A);
 const _kLabel = Color(0xFFCCDDCC);
 const _kPlaceholder = Color(0xFF4A6E4A);
 const _kLink = Color(0xFF4CAF50);
 
-class SignupScreen extends ConsumerStatefulWidget {
-  const SignupScreen({super.key});
+class ForgotPasswordScreen extends ConsumerStatefulWidget {
+  const ForgotPasswordScreen({super.key});
 
   @override
-  ConsumerState<SignupScreen> createState() => _SignupScreenState();
+  ConsumerState<ForgotPasswordScreen> createState() =>
+      _ForgotPasswordScreenState();
 }
 
-class _SignupScreenState extends ConsumerState<SignupScreen> {
+class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  bool _obscurePassword = true;
-  bool _agreedToTerms = false;
   bool _isLoading = false;
 
   @override
   void dispose() {
-    _nameController.dispose();
     _emailController.dispose();
-    _passwordController.dispose();
     super.dispose();
   }
 
-  Future<void> _signup() async {
+  Future<void> _sendVerificationCode() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
-
-    if (!_agreedToTerms) {
-      Helpers.showError(
-        context,
-        'Please agree to the Terms and Privacy Policy',
-      );
-      return;
-    }
 
     setState(() => _isLoading = true);
 
     try {
-      // TODO: Implement signup logic with API
+      // TODO: Implement forgot password logic with API
       await Future.delayed(const Duration(seconds: 2));
 
       if (mounted) {
-        Helpers.showSuccess(context, 'Account created successfully');
-        context.go('/login');
+        Helpers.showSuccess(
+          context,
+          'Verification code sent to ${_emailController.text}',
+        );
+        // Navigate to verification screen
+        context.push('/verify-email?email=${_emailController.text.trim()}');
       }
     } catch (e) {
       if (mounted) {
-        Helpers.showError(context, 'Signup failed: $e');
+        Helpers.showError(context, 'Failed to send verification code: $e');
       }
     } finally {
       if (mounted) {
@@ -95,15 +85,13 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                       // Logo image
                       Image.asset(
                         'assets/images/Logo Section (2).png',
-                        height: 70,
+                        height: 100,
                         fit: BoxFit.contain,
                       ),
-                      const SizedBox(height: 10),
-
-                      // Container directly below logo with no spacing
+                      const SizedBox(height: 16),
+                      // Forgot password container
                       Container(
                         width: 340,
-                        constraints: const BoxConstraints(minHeight: 634),
                         decoration: BoxDecoration(
                           gradient: const LinearGradient(
                             begin: Alignment.topLeft,
@@ -122,7 +110,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                           children: [
                             Center(
                               child: Text(
-                                'Create Your Account',
+                                'Forgot your password?',
                                 style: GoogleFonts.dmSans(
                                   color: _kWhite,
                                   fontSize: 28,
@@ -132,7 +120,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              'Join the future of AI-driven\nagriculture',
+                              'Enter your email to receive a\nverification code.',
                               style: GoogleFonts.dmSans(
                                 color: _kSubtitle,
                                 fontSize: 16,
@@ -141,26 +129,6 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                               ),
                             ),
                             const SizedBox(height: 32),
-                            Text(
-                              'Full Name',
-                              style: GoogleFonts.dmSans(
-                                color: _kLabel,
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            SizedBox(
-                              height: 50,
-                              child: _SignupField(
-                                controller: _nameController,
-                                hint: 'Enter your full name',
-                                validator:
-                                    (value) =>
-                                        Helpers.validateRequired(value, 'Name'),
-                              ),
-                            ),
-                            const SizedBox(height: 16),
                             Text(
                               'Email Address',
                               style: GoogleFonts.dmSans(
@@ -172,127 +140,13 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                             const SizedBox(height: 8),
                             SizedBox(
                               height: 50,
-                              child: _SignupField(
+                              child: _ForgotPasswordField(
                                 controller: _emailController,
                                 hint: 'farmer@agromind.ai',
                                 prefixIcon: Icons.mail_outline_rounded,
                                 keyboardType: TextInputType.emailAddress,
                                 validator: Helpers.validateEmail,
                               ),
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              'Password',
-                              style: GoogleFonts.dmSans(
-                                color: _kLabel,
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            SizedBox(
-                              height: 50,
-                              child: _SignupField(
-                                controller: _passwordController,
-                                hint: '••••••••',
-                                prefixIcon: Icons.lock_outline_rounded,
-                                obscureText: _obscurePassword,
-                                validator: Helpers.validatePassword,
-                                suffixIcon: GestureDetector(
-                                  onTap:
-                                      () => setState(
-                                        () =>
-                                            _obscurePassword =
-                                                !_obscurePassword,
-                                      ),
-                                  child: Icon(
-                                    _obscurePassword
-                                        ? Icons.visibility_outlined
-                                        : Icons.visibility_off_outlined,
-                                    color: _kSubtitle,
-                                    size: 20,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: Checkbox(
-                                    value: _agreedToTerms,
-                                    onChanged:
-                                        (v) => setState(
-                                          () => _agreedToTerms = v ?? false,
-                                        ),
-                                    side: const BorderSide(
-                                      color: _kFieldBorder,
-                                      width: 1.5,
-                                    ),
-                                    fillColor: WidgetStateProperty.resolveWith(
-                                      (states) =>
-                                          states.contains(WidgetState.selected)
-                                              ? _kGreen
-                                              : Colors.transparent,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 10),
-                                Expanded(
-                                  child: RichText(
-                                    text: TextSpan(
-                                      style: GoogleFonts.dmSans(
-                                        color: _kLabel,
-                                        fontSize: 13,
-                                        height: 1.5,
-                                      ),
-                                      children: [
-                                        const TextSpan(text: 'I agree to the '),
-                                        WidgetSpan(
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              // TODO: Navigate to Terms of Service
-                                            },
-                                            child: Text(
-                                              'Terms of Service',
-                                              style: GoogleFonts.dmSans(
-                                                color: _kLink,
-                                                fontSize: 13,
-                                                height: 1.5,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        const TextSpan(text: ' and '),
-                                        WidgetSpan(
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              // TODO: Navigate to Privacy Policy
-                                            },
-                                            child: Text(
-                                              'Privacy Policy',
-                                              style: GoogleFonts.dmSans(
-                                                color: _kLink,
-                                                fontSize: 13,
-                                                height: 1.5,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        const TextSpan(text: '.'),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
                             ),
                             const SizedBox(height: 32),
                             Container(
@@ -309,7 +163,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: ElevatedButton(
-                                onPressed: _isLoading ? null : _signup,
+                                onPressed:
+                                    _isLoading ? null : _sendVerificationCode,
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.transparent,
                                   shadowColor: Colors.transparent,
@@ -335,7 +190,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                                               MainAxisAlignment.center,
                                           children: [
                                             Text(
-                                              'Sign In',
+                                              'Send Verification Code',
                                               style: GoogleFonts.dmSans(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.w600,
@@ -343,7 +198,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                                             ),
                                             const SizedBox(width: 8),
                                             const Icon(
-                                              Icons.arrow_forward_rounded,
+                                              Icons.send_rounded,
                                               size: 20,
                                             ),
                                           ],
@@ -358,7 +213,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'Already have an account? ',
+                            'Remembered your password? ',
                             style: GoogleFonts.dmSans(
                               color: _kSubtitle,
                               fontSize: 14,
@@ -393,57 +248,39 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 // ────────────────────────────────────────────────────────────────
 // Reusable text field — private to this file
 // ────────────────────────────────────────────────────────────────
-class _SignupField extends StatelessWidget {
+class _ForgotPasswordField extends StatelessWidget {
   final TextEditingController controller;
   final String hint;
-  final IconData? prefixIcon;
-  final bool obscureText;
+  final IconData prefixIcon;
   final TextInputType keyboardType;
   final String? Function(String?)? validator;
-  final Widget? suffixIcon;
 
-  const _SignupField({
+  const _ForgotPasswordField({
     required this.controller,
     required this.hint,
-    this.prefixIcon,
-    this.obscureText = false,
+    required this.prefixIcon,
     this.keyboardType = TextInputType.text,
     this.validator,
-    this.suffixIcon,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
-      obscureText: obscureText,
       keyboardType: keyboardType,
       validator: validator,
       style: GoogleFonts.dmSans(color: _kWhite, fontSize: 14),
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: GoogleFonts.dmSans(color: _kPlaceholder, fontSize: 14),
-        prefixIcon:
-            prefixIcon != null
-                ? Icon(prefixIcon, color: _kSubtitle, size: 20)
-                : null,
-        prefixIconConstraints:
-            prefixIcon != null
-                ? const BoxConstraints(minWidth: 32, minHeight: 20)
-                : null,
-        suffixIcon:
-            suffixIcon != null
-                ? Padding(
-                  padding: const EdgeInsets.only(right: 12),
-                  child: suffixIcon,
-                )
-                : null,
+        prefixIcon: Icon(prefixIcon, color: _kSubtitle, size: 20),
+        prefixIconConstraints: const BoxConstraints(
+          minWidth: 32,
+          minHeight: 20,
+        ),
         filled: true,
         fillColor: _kFieldBg,
-        contentPadding: EdgeInsets.symmetric(
-          vertical: 16,
-          horizontal: prefixIcon != null ? 8 : 12,
-        ),
+        contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: const BorderSide(color: Color(0x1AFFFFFF), width: 1),

@@ -12,27 +12,52 @@ import '../../features/weather/presentation/screens/climate_analysis_screen.dart
 import '../../features/energy/presentation/screens/energy_monitoring_screen.dart';
 import '../../features/energy/presentation/screens/optimization_screen.dart';
 import '../../features/chatbot/presentation/screens/chat_screen.dart';
-import '../../features/shared/presentation/screens/dashboard_screen.dart';
+import '../../features/shared/presentation/screens/home_screen.dart';
 import '../../features/shared/presentation/screens/profile_screen.dart';
 import '../../features/shared/presentation/screens/settings_screen.dart';
 import '../../features/shared/presentation/screens/login_screen.dart';
 import '../../features/shared/presentation/screens/signup_screen.dart';
+import '../../features/shared/presentation/screens/forgot_password_screen.dart';
+import '../../features/shared/presentation/screens/verify_email_screen.dart';
+import '../../features/shared/presentation/screens/splash_screen.dart';
+import '../../features/shared/presentation/screens/onboarding_screen.dart';
 
 class AppRouter {
   static final GoRouter router = GoRouter(
-    initialLocation: '/login',
+    // Start at splash to enforce splash → onboarding → auth → home flow
+    initialLocation: '/',
     routes: [
+      // Splash Screen Route
+      GoRoute(path: '/', builder: (context, state) => const SplashScreen()),
+
+      // Onboarding Route
+      GoRoute(
+        path: '/onboarding',
+        builder: (context, state) => const OnboardingScreen(),
+      ),
+
       // Authentication Routes
       GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
       GoRoute(
         path: '/signup',
         builder: (context, state) => const SignupScreen(),
       ),
+      GoRoute(
+        path: '/forgot-password',
+        builder: (context, state) => const ForgotPasswordScreen(),
+      ),
+      GoRoute(
+        path: '/verify-email',
+        builder: (context, state) {
+          final email = state.uri.queryParameters['email'] ?? '';
+          return VerifyEmailScreen(email: email);
+        },
+      ),
 
-      // Main Dashboard
+      // Home Screen
       GoRoute(
         path: '/dashboard',
-        builder: (context, state) => const DashboardScreen(),
+        builder: (context, state) => const HomeScreen(),
       ),
 
       // Aquaculture Routes
