@@ -1,6 +1,6 @@
 {
-    "name": "agremind",
-    "short_name": "agremind",
+    "name": "Agromind",
+    "short_name": "Agromind",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

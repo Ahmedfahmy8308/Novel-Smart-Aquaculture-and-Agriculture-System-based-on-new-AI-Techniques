@@ -1,4 +1,4 @@
-# Agremind — Novel Smart Aquaculture & Agriculture System Based on New AI Techniques
+# Agromind — Novel Smart Aquaculture & Agriculture System Based on New AI Techniques
 
 > **Graduation Project — 2025 / 2026**
 >
@@ -6,7 +6,7 @@
 
 ## Overview
 
-**Agremind** is a distributed AI-powered smart farming platform designed to unify **agriculture**, **aquaculture**, **environmental analytics**, **energy optimization**, and **cognitive intelligence** into a single integrated ecosystem.
+**Agromind** is a distributed AI-powered smart farming platform designed to unify **agriculture**, **aquaculture**, **environmental analytics**, **energy optimization**, and **cognitive intelligence** into a single integrated ecosystem.
 
 The system follows a **layered hybrid architecture** composed of:
 
@@ -79,9 +79,9 @@ The architecture ensures scalability, modularity, and clear separation between p
 ```
 .
 ├── Docs/                  # Project documentation & research papers
-│   ├── Agremind AI Models.pdf
-│   ├── Agremind System Architecture.pdf
-│   └── Agremind System Overview.pdf
+│   ├── Agromind AI Models.pdf
+│   ├── Agromind System Architecture.pdf
+│   └── Agromind System Overview.pdf
 ├── frontend/              # Web application (Next.js)
 ├── ui-ux/                 # UI/UX design assets & prototypes
 ├── backend-core/          # Main backend (.NET Core — Business Logic & API)
@@ -152,4 +152,4 @@ We would like to thank our university, supervisors, and all contributors who sup
 
 ---
 
-*© 2025–2026 Agremind Team — Faculty of Computers and Information, Kafrelsheikh University. All rights reserved.*
+*© 2025–2026 Agromind Team — Faculty of Computers and Information, Kafrelsheikh University. All rights reserved.*

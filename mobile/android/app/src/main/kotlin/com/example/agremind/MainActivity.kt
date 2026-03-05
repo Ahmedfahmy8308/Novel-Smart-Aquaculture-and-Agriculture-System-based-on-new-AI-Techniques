@@ -1,4 +1,4 @@
-package com.example.agremind
+package com.example.Agromind
 
 import io.flutter.embedding.android.FlutterActivity
 

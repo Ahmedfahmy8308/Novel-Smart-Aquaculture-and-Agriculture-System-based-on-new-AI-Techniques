@@ -1,10 +1,10 @@
 class ApiConfig {
   // Base URLs
-  static const String baseUrl = 'https://api.agremind.com';
-  static const String plantServiceUrl = 'https://plant-api.agremind.com';
-  static const String fishServiceUrl = 'https://fish-api.agremind.com';
-  static const String llmServiceUrl = 'https://llm-api.agremind.com';
-  static const String smartMlServiceUrl = 'https://ml-api.agremind.com';
+  static const String baseUrl = 'https://api.Agromind.com';
+  static const String plantServiceUrl = 'https://plant-api.Agromind.com';
+  static const String fishServiceUrl = 'https://fish-api.Agromind.com';
+  static const String llmServiceUrl = 'https://llm-api.Agromind.com';
+  static const String smartMlServiceUrl = 'https://ml-api.Agromind.com';
 
   // API Versions
   static const String apiVersion = 'v1';
