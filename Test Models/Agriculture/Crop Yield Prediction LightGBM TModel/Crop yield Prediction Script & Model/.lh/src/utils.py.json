@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/utils.py",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1772647408937,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1772647408937,
+            "name": "Commit-0",
+            "content": "\"\"\"\r\nUtility preprocessing functions for crop yield project.\r\nProvides `preprocess_dataframe` which fits a ColumnTransformer\r\nand returns transformed arrays and the transformer for reuse.\r\n\"\"\"\r\nfrom typing import Tuple\r\nimport pandas as pd\r\nimport numpy as np\r\nfrom sklearn.impute import SimpleImputer\r\nfrom sklearn.preprocessing import StandardScaler, OneHotEncoder\r\nfrom sklearn.pipeline import Pipeline\r\nfrom sklearn.compose import ColumnTransformer\r\n\r\n\r\ndef preprocess_dataframe(df: pd.DataFrame, target_col: str = 'Yield_tons_per_hectare') -> Tuple[np.ndarray, np.ndarray, ColumnTransformer, list]:\r\n    df = df.copy()\r\n    if target_col not in df.columns:\r\n        raise ValueError(f\"Target column '{target_col}' not found in dataframe columns: {df.columns.tolist()}\")\r\n\r\n    y = df[target_col].values\r\n    X_df = df.drop(columns=[target_col])\r\n\r\n    # Identify numeric and categorical columns\r\n    numeric_cols = X_df.select_dtypes(include=[np.number]).columns.tolist()\r\n    categorical_cols = X_df.select_dtypes(include=['object', 'category']).columns.tolist()\r\n\r\n    # Pipelines\r\n    numeric_pipeline = Pipeline([\r\n        ('impute', SimpleImputer(strategy='median')),\r\n        ('scale', StandardScaler())\r\n    ])\r\n\r\n    categorical_pipeline = Pipeline([\r\n        ('impute', SimpleImputer(strategy='constant', fill_value='Unknown')),\r\n        ('ohe', OneHotEncoder(handle_unknown='ignore', sparse=False))\r\n    ])\r\n\r\n    preprocessor = ColumnTransformer(transformers=[\r\n        ('num', numeric_pipeline, numeric_cols),\r\n        ('cat', categorical_pipeline, categorical_cols)\r\n    ], remainder='drop')\r\n\r\n    X = preprocessor.fit_transform(X_df)\r\n\r\n    # Build feature names list (requires sklearn>=1.0 for get_feature_names_out)\r\n    feature_names = []\r\n    try:\r\n        if len(numeric_cols) > 0:\r\n            feature_names.extend(numeric_cols)\r\n        # get categorical feature names\r\n        if len(categorical_cols) > 0:\r\n            ohe = preprocessor.named_transformers_['cat'].named_steps['ohe']\r\n            cat_names = ohe.get_feature_names_out(categorical_cols).tolist()\r\n            feature_names.extend(cat_names)\r\n    except Exception:\r\n        # Fallback: numeric + categorical raw names\r\n        feature_names = numeric_cols + categorical_cols\r\n\r\n    return X, y, preprocessor, feature_names\r\n"
+        }
+    ]
+}
