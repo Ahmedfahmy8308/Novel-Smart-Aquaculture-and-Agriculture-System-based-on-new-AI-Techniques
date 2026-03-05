@@ -1,0 +1,28 @@
+# ── Core ──────────────────────────────────────
+fastapi>=0.115.0
+uvicorn[standard]>=0.34.0
+pydantic>=2.10.0
+pydantic-settings>=2.7.0
+python-multipart>=0.0.18
+
+# ── ML / DL ──────────────────────────────────
+numpy>=1.26.0
+pandas>=2.2.0
+scikit-learn>=1.6.0
+xgboost>=2.1.0
+lightgbm>=4.5.0
+tensorflow>=2.18.0
+torch>=2.5.0
+torchvision>=0.20.0
+ultralytics>=8.3.0           # YOLOv8
+statsmodels>=0.14.0          # ARIMA
+prophet>=1.1.6               # Prophet forecasting
+
+# ── Image Processing ─────────────────────────
+opencv-python>=4.10.0
+Pillow>=11.0.0
+
+# ── Utilities ────────────────────────────────
+python-dotenv>=1.0.0
+httpx>=0.28.0                # async HTTP client
+joblib>=1.4.0                # model serialization

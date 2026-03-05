@@ -1,0 +1,28 @@
+# ── Core ──────────────────────────────────────
+fastapi>=0.115.0
+uvicorn[standard]>=0.34.0
+pydantic>=2.10.0
+pydantic-settings>=2.7.0
+python-multipart>=0.0.18
+
+# ── LLM / NLP ───────────────────────────────
+torch>=2.5.0
+transformers>=4.47.0
+accelerate>=1.2.0
+bitsandbytes>=0.45.0         # quantization
+sentencepiece>=0.2.0
+tokenizers>=0.21.0
+
+# ── RAG ──────────────────────────────────────
+langchain>=0.3.0
+langchain-community>=0.3.0
+chromadb>=0.5.0              # vector store
+sentence-transformers>=3.3.0 # embeddings
+
+# ── Explainability ───────────────────────────
+shap>=0.46.0
+
+# ── Utilities ────────────────────────────────
+python-dotenv>=1.0.0
+httpx>=0.28.0                # async HTTP client
+numpy>=1.26.0
